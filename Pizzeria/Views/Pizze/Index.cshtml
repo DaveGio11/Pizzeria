@@ -1,0 +1,61 @@
+﻿﻿@model IEnumerable<Pizzeria.Models.Pizze>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+<div class="overlay h-100"></div>
+
+
+<div class="jumbotron jumbotron-fluid banner text-center">
+    <h1 class="display-4">Le Nostre Pizze</h1>
+    <p class="display-5">Benvenuti nella nostra pizzeria.</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5 mt-3">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card shadow text-black product-card">
+                <img src="@Html.DisplayFor(modelItem => item.Immagine)" class="card-img-top" alt="@item.Nome Image">
+                <div class="card-body">
+                    <h4 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h4>
+                    <p class="card-text">
+                        <span>Prezzo: € @Html.DisplayFor(modelItem => item.Prezzo)</span>
+                        <br />
+                        <span class="Tempo_Consegna">Consegna: @Html.DisplayFor(modelItem => item.Tempo_Consegna) Minuti</span>
+                        <br />
+                        <span>Ingredienti: @Html.DisplayFor(modelItem => item.Ingredienti)</span>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <button>  
+                        @Html.ActionLink("Acquista","AddToCart","Pizze",  new { id = item.ID_Pizza }, null )
+                            </button>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+
+                            <button>
+                                @Html.ActionLink("Modifica", "Edit", new { id = item.ID_Pizza })
+                            </button>
+
+                            <button>
+                                @Html.ActionLink("Elimina", "Delete", new { id = item.ID_Pizza })
+                            </button>
+                        }
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <p>Accedi per Acquistare</p>
+                        }
+                </div>
+            </div>
+        </div>
+    }
+</div>

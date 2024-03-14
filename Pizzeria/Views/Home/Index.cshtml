@@ -1,0 +1,97 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ristoria Pizzorante</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+        header {
+            background-image: url('https://www.pizzeriadamichelefirenze.it/wp-content/uploads/2018/03/pizze-head-2-1024x576.jpg');
+            background-size: cover;
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+
+            header h1 {
+                font-size: 3rem;
+                margin-bottom: 10px;
+            }
+
+        main {
+            padding: 50px;
+        }
+
+        section.container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            padding: 30px;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            footer a {
+                color: white;
+                text-decoration: none;
+            }
+    </style>
+</head>
+<body>
+    <header class="container-fluid">
+        <h1 class="text-white">Pizzeria RealPizza</h1>
+        <p class="text-white">L'arte della pizza incontra la passione culinaria autentica.</p>
+    </header>
+    <main>
+        <section class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Il nostro menu</h2>
+                    <p>Esplora una vasta selezione di pizze artigianali, realizzate con ingredienti freschi e genuini.</p>
+                    @Html.ActionLink("Scopri il menu", "Index", "Pizze", null, new { @class = "btn btn-outline-dark btn-lg" })
+                </div>
+                <div class="col-md-6">
+                    <img src="~/Content/Immagini/Menu.jpg" alt="Menu" class="img-fluid rounded-3 w-100 h-100">
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="~/Content/Immagini/Fattorino.jpg" alt="Consegne a domicilio" class="img-fluid rounded-3 w-100 h-100">
+                </div>
+                <div class="col-md-6">
+                    <h2>Consegne a domicilio</h2>
+                    <p>Sentiti male con le nostre pizze direttamente a casa tua, con il nostro servizio di consegna a domicilio vomiti lì e non sporchi da noi</p>
+                    <p>Ordina online o chiamaci al numero Segreto</p>
+                </div>
+
+            </div>
+        </section>
+        <section class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <iframe class="rounded-3" width="400" height="250" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6844565.288961146!2d84.72806645772494!3d33.10716738328714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x376530c9d373a977%3A0x83b13173a523ec44!2sPrefettura%20di%20Nagqu%2C%20Tibet%2C%20Cina!5e0!3m2!1sit!2sit!4v1710356405606!5m2!1sit!2sit"></iframe>
+                </div>
+                <div class="col-md-6">
+                    <h2>Retro Satana</h2>
+                    <p>Non ci venite, le pizze sono avariate e il fattorino si scaccola</p>
+                    <p>Indirizzo: Via di non ritorno, 112 - Ovunque</p>
+                    <p>Orari: Lunedì - Domenica 19:00-23:00, Mercoledì chiusi</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

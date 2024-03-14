@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Pizzeria.Models.Ordini>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Bibite.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Pizze.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Users.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Users1.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Indirizzo_Consegna)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantita)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Totale)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Bibite.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Pizze.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Users.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Users1.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Indirizzo_Consegna)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantita)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Totale)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Ordine }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID_Ordine }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Ordine })
+        </td>
+    </tr>
+}
+
+</table>
