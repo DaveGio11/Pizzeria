@@ -1,0 +1,46 @@
+﻿﻿@model Pizzeria.Models.Users
+
+@{
+    ViewBag.Title = "Authorize";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card" style="margin-bottom: 300px; margin-top:100px">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Accedi</h2>
+
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mt-3">
+                            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block mt-4">Accedi</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

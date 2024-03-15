@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Pizzeria.Models;
 
-namespace Pizzeria.Controllers
+namespace Pizzeria.Models
 {
+
     public class PizzeController : Controller
     {
         private ModeldbContext db = new ModeldbContext();
@@ -20,7 +20,7 @@ namespace Pizzeria.Controllers
             return View(db.Pizze.ToList());
         }
 
-        // GET: Pizze/Details/5
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,7 +35,7 @@ namespace Pizzeria.Controllers
             return View(pizze);
         }
 
-        // GET: Pizze/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -46,17 +46,41 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID_Pizza,Nome,Prezzo,Tempo_Consegna,Ingredienti,Immagine")] Pizze pizze)
+        public ActionResult Create([Bind(Include = "ID_Pizza,Nome,Prezzo,Tempo_Consegna,Ingredienti,Immagine")] Pizze pizze, HttpPostedFileBase file)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Pizze.Add(pizze);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/Immagini"), fileName);
+                    file.SaveAs(path);
+                    pizze.Immagine = "/Content/Immagini/" + fileName;
+                }
+                else
+                {
+                    pizze.Immagine = "/Content/Immagini/default.jpg";
+                }
+
+                if (ModelState.IsValid)
+                {
+                    db.Pizze.Add(pizze);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Gestisci l'eccezione, registrandola o visualizzando un messaggio all'utente
+                Console.WriteLine("Errore durante il salvataggio del file: " + ex.Message);
             }
 
+            // Se si arriva a questo punto, significa che c'è un errore nel modello o nel salvataggio
             return View(pizze);
         }
+
+
+
 
         // GET: Pizze/Edit/5
         public ActionResult Edit(int? id)
@@ -115,13 +139,64 @@ namespace Pizzeria.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        public ActionResult Carrello()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var carrello = Session["Carrello"] as List<Pizze> ?? new List<Pizze>();
+            return View(carrello);
         }
+
+        public ActionResult AddToCart(int id)
+        {
+            using (var dbContext = new ModeldbContext())
+            {
+                var pizza = dbContext.Pizze.Find(id);
+                if (pizza != null)
+                {
+                    var carrello = Session["Carrello"] as List<Pizze> ?? new List<Pizze>();
+                    carrello.Add(pizza);
+                    Session["Carrello"] = carrello;
+
+                    TempData["Message"] = "Prodotto aggiunto al carrello con successo.";
+                }
+                else
+                {
+                    TempData["Message"] = "Errore: Prodotto non trovato.";
+                }
+
+                return RedirectToAction("Index", "Pizze");
+            }
+        }
+
+        public ActionResult RemoveFromCart(int id)
+        {
+            using (var dbContext = new ModeldbContext())
+            {
+                var carrello = Session["Carrello"] as List<Pizze>;
+                if (carrello != null)
+                {
+                    // Cerca la pizza nel carrello
+                    var pizzaToRemove = carrello.FirstOrDefault(p => p.ID_Pizza == id);
+                    if (pizzaToRemove != null)
+                    {
+                        // Rimuovi la pizza dal carrello
+                        carrello.Remove(pizzaToRemove);
+                        Session["Carrello"] = carrello;
+
+                        TempData["Message"] = "Prodotto rimosso dal carrello con successo.";
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Errore: Prodotto non trovato nel carrello.";
+                    }
+                }
+                else
+                {
+                    TempData["Message"] = "Errore: Carrello non trovato.";
+                }
+
+                return RedirectToAction("Index", "Pizze");
+            }
+        }
+
     }
 }

@@ -1,0 +1,76 @@
+﻿﻿@model IEnumerable<Pizzeria.Models.Pizze>
+
+@{
+    ViewBag.Title = "Carrello";
+}
+<style>
+    body {
+        background-color: #FFFDD7;
+    }
+
+    a 
+    {
+        text-decoration: none;
+        color: black;  
+    }
+
+    a:hover 
+    {
+        color: white;
+    }
+
+    
+
+    
+</style>
+
+<h2>Carrello</h2>
+
+<table class="table" style="margin-bottom:200px">
+    <tr>
+        <th>Immagine</th>
+        <th>Nome</th>
+        <th>Prezzo</th>
+        <th>Tempo di Consegna</th>
+        <th>Ingredienti</th>
+        <th>Opzioni</th>
+    </tr>
+
+    @{
+        decimal Tot = 0;
+    }
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><img src="@item.Immagine" alt="Immagine Pizza" style="width: 100px; height: 100px;" /></td>
+            <td>@item.Nome</td>
+            <td>@item.Prezzo €</td>
+            <td>@item.Tempo_Consegna min</td>
+            <td>@item.Ingredienti</td>
+            <td>
+                <button class="btn btn-outline-danger">  @Html.ActionLink("Rimuovi", "RemoveFromCart", "Pizze", new { id = item.ID_Pizza }, null)</button>
+            </td>
+        </tr>
+
+        { Tot += item.Prezzo; }
+
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td><strong>Tot: @Tot €</strong></td>
+            <td></td>
+            <td></td>
+            <td> <button class="btn btn-outline-warning">  @Html.ActionLink("Ordina", "", "Pizze", new { id = item.ID_Pizza }, null)</button></td>
+        </tr>
+    }
+
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert mb-5" role="alert" style="background-color: darkred; color: white; border: 1px solid #632722">
+        <h2>Carrello vuoto</h2>
+    </div>
+}

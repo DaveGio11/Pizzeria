@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Pizzeria.Models;
+using System.Web.Security;
 
-namespace Pizzeria.Controllers
+namespace Pizzeria.Models
 {
     public class UsersController : Controller
     {
@@ -113,6 +109,53 @@ namespace Pizzeria.Controllers
             db.Users.Remove(users);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Authorize()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Authorize(string username, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var context = new ModeldbContext())
+                {
+                    var user = context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+
+                    if (user != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(username, false);
+                        TempData["LoginMessage"] = "Benvenuto " + user.Username;
+
+                        if (user.Ruolo == "Admin")
+                        {
+                            TempData["AdminMessage"] = "Hai effettuato l'accesso come amministratore.";
+                        }
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Username o Password errati");
+                        return View();
+                    }
+                }
+            }
+            else
+            {
+                // Il modello non è valido, ritorna la vista con i dati dell'utente
+                return View("Authorize", new Users { Username = username });
+            }
+        }
+
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            TempData["LogoutMessage"] = "Sei stato disconnesso correttamente.";
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)
