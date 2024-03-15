@@ -1,76 +1,101 @@
-﻿﻿@model IEnumerable<Pizzeria.Models.Pizze>
+﻿﻿﻿@model IEnumerable<Pizzeria.Models.Pizze>
 
 @{
     ViewBag.Title = "Carrello";
 }
+
 <style>
     body {
         background-color: #FFFDD7;
     }
 
-    a 
-    {
+    a {
         text-decoration: none;
-        color: black;  
+        color: black;
     }
 
-    a:hover 
-    {
-        color: white;
-    }
-
-    
-
-    
+        a:hover {
+            color: white;
+        }
 </style>
+
+@if (TempData["Message"] != null)
+{
+    <div id="alertMessage" class="alert alert-danger" role="alert">
+        @TempData["Message"]
+    </div>
+
+    <script>
+        // Funzione per nascondere automaticamente l'alert dopo un certo periodo di tempo
+        window.setTimeout(function () {
+            $("#alertMessage").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 1000); // L'alert scomparirà dopo 3 secondi (3000 millisecondi)
+    </script>
+}
+
+
 
 <h2>Carrello</h2>
 
-<table class="table" style="margin-bottom:200px">
-    <tr>
-        <th>Immagine</th>
-        <th>Nome</th>
-        <th>Prezzo</th>
-        <th>Tempo di Consegna</th>
-        <th>Ingredienti</th>
-        <th>Opzioni</th>
-    </tr>
+@using (Html.BeginForm("Ordina", "Ordina", FormMethod.Post))
+{
+    <table class="table table-striped" style="margin-bottom: 200px;">
+        <thead>
+            <tr>
+                <th>Immagine</th>
+                <th>Nome</th>
+                <th>Prezzo</th>
+                <th>Tempo di Consegna</th>
+                <th>Ingredienti</th>
+                <th>Note</th>
+                <th>Rimuovi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                decimal Tot = 0;
+            }
 
-    @{
-        decimal Tot = 0;
-    }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img src="@item.Immagine" alt="Immagine Pizza" style="width: 100px; height: 100px;" /></td>
+                    <td>@item.Nome</td>
+                    <td>@item.Prezzo €</td>
+                    <td>@item.Tempo_Consegna min</td>
+                    <td>@item.Ingredienti</td>
+                    <td><input type="text" class="form-control" name="note" placeholder="Note"></td>
+                    <td>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td><img src="@item.Immagine" alt="Immagine Pizza" style="width: 100px; height: 100px;" /></td>
-            <td>@item.Nome</td>
-            <td>@item.Prezzo €</td>
-            <td>@item.Tempo_Consegna min</td>
-            <td>@item.Ingredienti</td>
-            <td>
-                <button class="btn btn-outline-danger">  @Html.ActionLink("Rimuovi", "RemoveFromCart", "Pizze", new { id = item.ID_Pizza }, null)</button>
-            </td>
-        </tr>
+                        @Html.ActionLink("Rimuovi", "RemoveFromCart", new { id = item.ID_Pizza }, new { @class = "btn btn-outline-danger" })
+                    </td>
+                </tr>
 
-        { Tot += item.Prezzo; }
+                { Tot += item.Prezzo; }
+            }
 
-
-        <tr>
-            <td></td>
-            <td></td>
-            <td><strong>Tot: @Tot €</strong></td>
-            <td></td>
-            <td></td>
-            <td> <button class="btn btn-outline-warning">  @Html.ActionLink("Ordina", "", "Pizze", new { id = item.ID_Pizza }, null)</button></td>
-        </tr>
-    }
-
-</table>
+            <tr>
+                <td colspan="1"></td>
+                <td colspan="1"></td>
+                <td colspan="1"></td>
+                <td colspan="1"></td>
+                <td colspan="1"><strong> @Tot € </strong> </td>
+                <td colspan="1"> <input type="text" class="form-control" name="indirizzo" placeholder="Indirizzo" required> </td>
+                <td colspan="1">
+                    <button type="submit" class="btn btn-outline-warning">Ordina</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
 
 @if (!Model.Any())
 {
+
     <div class="alert mb-5" role="alert" style="background-color: darkred; color: white; border: 1px solid #632722">
         <h2>Carrello vuoto</h2>
     </div>
+
 }
